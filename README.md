@@ -20,7 +20,7 @@ python tools/eval_classification_lenet.py --dataset mnist --split test --model l
 Then start the adaptation process by,
 
 ```
-python tools/adapt_lenet.py --source svhn:train --target mnist:train --model --output lenet adapt_lenet_svhn_mnist
+python tools/adapt_lenet.py --source svhn:train --target mnist:train --model lenet --output adapt_lenet_svhn_mnist
 ```
 
 After the program paused, run the following to initialize the centers,
