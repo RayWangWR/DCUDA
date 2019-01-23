@@ -19,9 +19,9 @@ import matplotlib.pyplot as plt
 @click.option('--source', default='svhn:train')
 @click.option('--target', default='mnist:train')
 @click.option('--model', default='lenet')
-@click.option('--output', default='adda_lenet_svhn_mnist_DEC_diss_addaf')
+@click.option('--output', default='adapt_lenet_svhn_mnist')
 @click.option('--gpu', default='0')
-@click.option('--iterations', default=10000)
+@click.option('--iterations', default=900)
 @click.option('--batch_size', default=128)
 @click.option('--display', default=10)
 @click.option('--lr', default= 0.0002)
@@ -213,7 +213,7 @@ def main(source, target, model, output,
     # bar.refresh()
     val_acc = []
     iters = []
-    val_iters = list(range(0,200,10)) + [200,300] + list(range(400,iterations+1,400))
+    val_iters = list(range(0,200,10)) + list(range(200,iterations+1,100))
     for i in bar:
 
         kl_val = -1
@@ -223,7 +223,7 @@ def main(source, target, model, output,
 
         adda_steps = 0#21
         if i == adda_steps:
-            while input('Press "c" to continue:') != 'c':
+            while input('Initialize centers and press "c" to continue:') != 'c':
                 pass
             data = np.load(centroids_path).item()
             centers_data = data['centers']
@@ -242,12 +242,8 @@ def main(source, target, model, output,
             if len(np.unique(cluster_assign_v)) == n_clusters:
                 diss_loss_v, centers_v, _ = sess.run([diss_loss, centers, diss_loss_step])
                 print(np.argmax(centers_v, axis=1).flatten())
-                # diss_loss_v, _ = sess.run([diss_loss, diss_loss_step], feed_dict={target_im_batch_h: target_ims, cluster_assign: cluster_assign_v})
-                # sim_mat_v = sess.run(sim_mat, feed_dict={target_im_batch_h: target_ims, cluster_assign: cluster_assign_v})
-                # print(sim_mat_v)
             else:
                 print('Only {} clusters for iteration {}.'.format(len(np.unique(cluster_assign_v)), i))
-        # print('Number of clusters: {}'.format(len( np.unique(cluster_assign_v) )))
 
         weights_ins_v = np.ones(2 * batch_size)
         mapping_loss_val, adversary_loss_val, _, _ = sess.run(
@@ -270,8 +266,6 @@ def main(source, target, model, output,
                                 np.mean(adversary_losses),
                                 kl_val,
                                 diss_loss_v))
-            # print(P_val[0])
-            # print(Q_val[0])
         if stepsize is not None and (i + 1) % stepsize == 0:
             lr = sess.run(lr_var.assign(lr * 0.1))
             logging.info('Changed learning rate to {:.0e}'.format(lr))
@@ -298,20 +292,12 @@ def main(source, target, model, output,
             logging.info('Class-wise accuracy:')
             logging.info( '  '.join(['{:.3f}'.format(x) for x in class_acc]))
             logging.info('Overall accuracy: {}'.format(acc))
-            # logging.info('Validation acuracy for selected classes: {}'.format(acc))
             val_acc.append(acc)
             iters.append(i)
 
     coord.request_stop()
     coord.join(threads)
     sess.close()
-
-    np.save('/home/ray/adda-master/{}.npy'.format(output),{'val_acc': val_acc, 'iters': iters})
-    plt.plot(iters, val_acc)
-    plt.xlabel('Iterations')
-    plt.ylabel('Accuracy')
-    plt.title(output)
-    plt.show()
 
 
 if __name__ == '__main__':

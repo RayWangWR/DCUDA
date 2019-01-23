@@ -28,7 +28,7 @@ def format_array(arr):
 @click.argument('split')
 @click.argument('model')
 @click.argument('output')
-@click.option('--gpu', default='1')
+@click.option('--gpu', default='0')
 @click.option('--iterations', default=1000)
 @click.option('--batch_size', default=50)
 @click.option('--display', default=10)
@@ -92,7 +92,7 @@ def main(dataset='data/office31', split='amazon', model='resnet_v1', output='res
     # Load weights
     skip_vars = ['logits/weights', 'logits/biases']
     ns = list(model_vars.keys())
-    path = '/home/ray/adda-master/resnet_v1_slim/resnet_v1_50.ckpt'
+    path = './resnet_v1_slim/resnet_v1_50.ckpt'
     reader = pywrap_tensorflow.NewCheckpointReader(path)
     for n in ns:
         if n in skip_vars:

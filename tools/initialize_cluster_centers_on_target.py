@@ -13,7 +13,7 @@ import adda
 dataset_name = 'mnist'
 split = 'test'
 model = 'lenet'
-save_path = 'snapshot/adda_lenet_svhn_mnist_DEC_diss_addaf'
+save_path = 'snapshot/adapt_lenet_svhn_mnist'
 weights_d = 'snapshot/lenet_svhn'
 batch_size = 128
 selected = list(range(10))
@@ -117,7 +117,7 @@ for l, c in zip(range(len(selected)),colors):
 #     # plt.scatter(ft_em[label_km==i,0],ft_em[label_km==i,1],color=colors_dict[centers_label[i]],s=2)
 #     plt.scatter(centers_em[i,0], centers_em[i,1],color='b',marker='x',s=20)
 # plt.legend(hs,ls, loc='upper right')
-# plt.title('Classes')
+plt.title('Classes')
 ax.set_yticklabels([])
 ax.set_xticklabels([])
 plt.figure()

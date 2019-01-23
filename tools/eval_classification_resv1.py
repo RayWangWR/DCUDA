@@ -26,10 +26,6 @@ def format_array(arr):
 
 
 @click.command()
-# @click.argument('dataset')
-# @click.argument('split')
-# @click.argument('model')
-# @click.argument('weights')
 @click.option('--dataset', default='data/office31')
 @click.option('--split', default='dslr')
 @click.option('--model', default='resnet_v1_50')
@@ -50,10 +46,6 @@ def main(dataset, split, model, weights, gpu):
     img = ds.preprocess(img, istraining=False)
     im_batch, label_batch = tf.train.batch([img, label], batch_size=1)
 
-    # with tf.variable_scope(model, reuse=False):
-    #     model_c = AlexNet(im_batch, 1, 31, ['fc8'], '/home/ray/adda-master/scripts/bvlc_alexnet.npy')
-    # net = model_c.fc8
-    # net = tf.argmax(net, -1)
     with slim.arg_scope(resnet_v1.resnet_arg_scope()):
         logits, _ = resnet_v1_50(im_batch, 31, is_training=False, scope=model)
     net = tf.argmax(logits, -1)
@@ -90,23 +82,6 @@ def main(dataset, split, model, weights, gpu):
     coord.request_stop()
     coord.join(threads)
     sess.close()
-
-    # selected = [2,8]
-    # n_corrects = 0
-    # n_samples = 0
-    # for l in selected:
-    #     nc = confusion[l,l]
-    #     na = sum(confusion[l])
-    #     print('{}: {}'.format(l, nc/na))
-    #     n_corrects += nc
-    #     n_samples += na
-    # print('Selected: {}'.format(n_corrects/n_samples))
-
-    # confusion_df = pd.DataFrame(confusion, index=ds.all_classes,
-    #                             columns=ds.all_classes)
-    # plt.figure(figsize=(20, 20))
-    # sn.heatmap(confusion_df, annot=True, cbar=True, fmt='d', cmap='OrRd')
-    # plt.show()
     
 
 if __name__ == '__main__':

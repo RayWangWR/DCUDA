@@ -20,21 +20,13 @@ dataset_name = 'data/office31'
 source_split = 'amazon'
 target_split = 'dslr'
 model = 'resnet50_v1'
-save_path = 'snapshot/adda_resv1_amazon_dslr_DEC_diss_addaf_st_2'
+save_path = 'snapshot/adapt_resv1_amazon31_dslr10'
 weights_d = 'snapshot/res1_office31_amazon'
 batch_size = 25
 selected = None
 gpu = '0'
 
 os.environ['CUDA_VISIBLE_DEVICES'] = gpu
-
-# dataset = getattr(adda.data.get_dataset(dataset_name, ratios=ratios),split)#, selected=selected, ratios=ratios),split)
-# imgs, labels = dataset.tf_ops()
-# model_fn = adda.models.get_model_fn(model)
-# imgs = adda.models.preprocessing(imgs, model_fn)
-# im_batch, label_batch = tf.train.batch(
-#         [imgs, labels], batch_size=batch_size)
-# ft, _ = model_fn(im_batch, scope='model')
 
 ds_s = office31('data/office31', source_split)  # ,selected=['bike_helmet'])
 split_s = getattr(ds_s, 'train')
@@ -108,15 +100,6 @@ label_bs_t = np.concatenate(label_bs_t, axis=0)
 label_bs_p_t = np.concatenate(label_bs_p_t, axis=0)
 
 n_clusters=31
-# print( np.unique(label_bs,return_counts=True)[1] )
-# for i in range(n_clusters):
-#     num_p = sum(label_bs_p == i)
-#     num_gt = sum(label_bs == i)
-#     print('{} gt:{}, pred:{}'.format(i,num_gt,num_p))
-
-# kmeans = KMeans(n_clusters=n_clusters, verbose=1, random_state=20).fit(ft_bs)
-# label_km = kmeans.labels_
-# cluster_centers = kmeans.cluster_centers_
 
 cluster_centers = []
 for l in range(31):
@@ -137,7 +120,7 @@ cluster_centers = np.stack(cluster_centers,axis=0)
 # centers_label = np.array(centers_label)
 centers_label = np.array(range(n_clusters))
 
-np.save( os.path.join(save_path, 'kmeans_31.npy'), {'centers': cluster_centers, 'labels': centers_label} )
+np.save( os.path.join(save_path, 'means_31.npy'), {'centers': cluster_centers, 'labels': centers_label} )
 
 ft_em_all = TSNE(n_components=2,verbose=1,perplexity=50).fit_transform(np.concatenate([cluster_centers, ft_bs_s, ft_bs_t], axis=0))
 centers_em = ft_em_all[:n_clusters]
