@@ -20,7 +20,7 @@ python tools/eval_classification_lenet.py --dataset mnist --split test --model l
 Then start the adaptation process by,
 
 ```
-python tools/adapt_lenet.py svhn:train mnist:train lenet adapt_lenet_svhn_mnist
+python tools/adapt_lenet.py --source svhn:train --target mnist:train --model --output lenet adapt_lenet_svhn_mnist
 ```
 
 After the program paused, run the following to initialize the centers,
@@ -32,7 +32,7 @@ python tools/initialize_cluster_centers_on_target.py
 then press 'c' to continue. You can evaluate the performance by,
 
 ```
-python tools/eval_classification_lenet.py mnist test lenet snapshot/adapt_lenet_svhn_mnist
+python tools/eval_classification_lenet.py --dataset mnist --split test --model lenet --weights snapshot/adapt_lenet_svhn_mnist
 ```
 
 
@@ -50,13 +50,13 @@ First, train a source model on Amazon and evaluate on DSLR:
 
 ```
 python tools/train_resv1.py data/office31 amazon resnet_v1_50 res1_office31_amazon
-python tools/eval_classification_resv1.py  data/office31 dslr resnet_v1_50 snapshot/res1_office31_amazon
+python tools/eval_classification_resv1.py  --dataset data/office31 --split dslr --model resnet_v1_50 --weights snapshot/res1_office31_amazon
 ```
 
 Then start the adaptation process by,
 
 ```
-python tools/adapt_resnet50.py data/office31:amazon data/office31:dslr resnet_v1_50 adapt_resv1_amazon31_dslr10
+python tools/adapt_resnet50.py --source data/office31:amazon --target data/office31:dslr --model resnet_v1_50 --output adapt_resv1_amazon31_dslr10
 ```
 
 After the program paused, run the following to initialize the centers,
@@ -68,5 +68,5 @@ python tools/initialize_cluster_centers_target_office_ts.py
 then press 'c' to continue. You can evaluate the performance by,
 
 ```
-python tools/eval_classification_resv1.py  data/office31 dslr resnet_v1_50 snapshot/adapt_resv1_amazon31_dslr10
+python tools/eval_classification_resv1.py  --dataset data/office31 --split dslr --model resnet_v1_50 --weights snapshot/adapt_resv1_amazon31_dslr10
 ```
