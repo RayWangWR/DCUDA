@@ -4,6 +4,7 @@ This code runs two domain adaptation experiments in the paper: SVHN->MNIST (bala
 ```
 pip install -r requirements.txt
 export PYTHONPATH="$PWD:$PYTHONPATH"
+mkdir data
 ```
 
 Please always stay in the project home directory on running the code.
