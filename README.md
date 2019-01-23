@@ -14,7 +14,7 @@ First, train a svhn source model using lenet and evaluate it on mnist.
 
 ```
 python tools/train_lenet.py svhn train lenet lenet_svhn
-python tools/eval_classification_lenet.py mnist test lenet snapshot/lenet_svhn
+python tools/eval_classification_lenet.py --dataset mnist --split test --model lenet --weights snapshot/lenet_svhn
 ```
 
 Then start the adaptation process by,
