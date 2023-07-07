@@ -1,5 +1,5 @@
 # DCUDA
-This code runs the A31->D10 partial domain adaptation on Office31. Go to the home directory of the project and run the following:
+This code runs the A31->D10 partial domain adaptation on Office31 for this [paper](https://arxiv.org/abs/1905.13331). Go to the home directory of the project and run the following:
 
 ```
 pip install -r requirements.txt
